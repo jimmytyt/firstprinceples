@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="第一性原理人生地图：40 个人生领域的第一性原理、拆解、案例与实操步骤。纯本地、离线可用。">
+  <title>第一性原理人生地图</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    try {
+      document.documentElement.classList.add(localStorage.getItem("fp.mapView") === "cards" ? "view-cards" : "view-star");
+    } catch (e) {
+      document.documentElement.classList.add("view-star");
+    }
+  </script>
+  <script src="assets/js/core.js"></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main id="app" class="wrap map-wrap">
+    <section class="hero">
+      <h1>第一性原理人生地图</h1>
+      <p class="lede">把 40 个人生领域层层剥开，回到不可再拆的基本事实，再从事实出发重建你的判断与行动。</p>
+      <div class="definition">
+        <strong>什么是第一性原理？</strong>
+        不借用类比与惯例，而是追问「这件事里，哪些是确定为真的最基本事实」，然后只从这些事实出发往上推导。
+        类比推理告诉你「别人都这么做」，第一性原理告诉你「事情本来是什么样」。
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <label class="search" aria-label="搜索领域">
+        <span aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="搜索领域、原理关键词（按 / 聚焦）" autocomplete="off">
+        <button id="search-clear" class="clear hidden" type="button" aria-label="清除搜索">✕</button>
+      </label>
+      <nav class="group-nav" id="group-nav" aria-label="大区筛选"></nav>
+      <div class="toolbar-end">
+        <div class="view-switch" role="group" aria-label="地图视图">
+          <button type="button" id="view-star" aria-pressed="true">星图</button>
+          <button type="button" id="view-cards" aria-pressed="false">卡片</button>
+        </div>
+        <button type="button" class="btn" id="random-domain">随机一个</button>
+      </div>
+    </div>
+    <div class="progress-summary" id="progress-summary"></div>
+
+    <div id="starmap" class="starmap" aria-label="原理星图"></div>
+    <div id="map"></div>
+    <p id="empty-result" class="empty-result hidden">没有匹配的领域，换个关键词试试。</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">第一性原理人生地图 · 本地离线版 · 学习进度仅保存在本浏览器中</div>
+  </footer>
+
+  <script src="data/catalog.js"></script>
+  <script src="assets/js/home.js"></script>
+</body>
+</html>

@@ -67,6 +67,8 @@ html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
 body {
   margin: 0;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
   font-family: var(--font);
   font-size: 16px;
   line-height: 1.75;
@@ -549,7 +551,81 @@ body.view-star #map { display: none; }
 
 @media (max-width: 860px) {
   .toolbar { align-items: stretch; }
-  .toolbar-end { width: 100%; justify-content: space-between; }
+  .toolbar-end { width: 100%; justify-content: space-between; margin-left: 0; }
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    top: 0;
+    padding-top: env(safe-area-inset-top);
+    background: var(--bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .search { max-width: none; flex-basis: 100%; }
+  .group-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    width: 100%;
+    padding-bottom: 2px;
+  }
+  .group-nav button,
+  .view-switch button,
+  #random-domain { min-height: 44px; }
+  .group-nav button { flex: 0 0 auto; }
+
+  .starmap {
+    overflow-x: hidden;
+    padding: 20px 4px 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .star-cols {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+  .star-cols::before { display: none; }
+  .star-col { scroll-margin-top: 72px; }
+  .star-list::before { left: 15px; }
+  .star-node {
+    white-space: normal;
+    min-height: 44px;
+    padding: 10px 8px 12px 36px;
+  }
+  .star-node .dot {
+    left: 15px;
+    top: 18px;
+    margin: 0 0 0 -4px;
+  }
+  .star-tip,
+  .star-node:hover .star-tip,
+  .star-node:focus .star-tip {
+    display: block;
+    position: static;
+    width: auto;
+    max-width: none;
+    margin-top: 4px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: rgba(236, 234, 230, 0.72);
+  }
+  .star-col:nth-child(5) .star-tip,
+  .star-col:nth-child(4) .star-tip { left: auto; right: auto; }
+
+  .actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin-top: 20px;
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+  }
+  .site-footer { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
 }
 
 @media print {

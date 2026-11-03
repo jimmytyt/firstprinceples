@@ -20,7 +20,14 @@
 
   var entries = []; /* {card, node, groupId, catId, text, id} */
   var groupFilter = null;
-  var view = localStorage.getItem(VIEW_KEY) === "cards" ? "cards" : "star";
+
+  function initialView() {
+    var saved = null;
+    try { saved = localStorage.getItem(VIEW_KEY); } catch (e) {}
+    if (saved === "cards" || saved === "star") return saved;
+    return window.matchMedia("(max-width: 768px)").matches ? "cards" : "star";
+  }
+  var view = initialView();
 
   function renderSummary() {
     var total = FP.allMeta().length;
@@ -65,9 +72,14 @@
     return FP.el("span", { class: "badge" }, "未读");
   }
 
-  function extraText(d) {
-    var b = d.breakdown || {};
-    return [b.essence || ""].concat(b.rebuild || []).join(" ");
+  function brief(id) {
+    var m = (FP.manifest && FP.manifest[id]) || FP.domains[id] || {};
+    var principle = m.principle || "（内容整理中）";
+    var extra = m.search;
+    if (!extra && m.breakdown) {
+      extra = [m.breakdown.essence || ""].concat(m.breakdown.rebuild || []).join(" ");
+    }
+    return { principle: principle, extra: extra || "" };
   }
 
   function groupCount(g) {
@@ -128,8 +140,8 @@
         var catEl = FP.el("div", { class: "category", id: "cat-" + c.id }, [FP.el("h3", {}, c.name), grid]);
 
         c.domains.forEach(function (d) {
-          var data = FP.domains[d.id];
-          var principle = data && data.principle ? data.principle : "（内容整理中）";
+          var info = brief(d.id);
+          var principle = info.principle;
           var card = FP.el("a", { class: "card", href: "detail.html?id=" + d.id, "data-id": d.id }, [
             FP.el("div", { class: "card-title" }, [FP.el("h4", {}, d.name), badgeFor(d.id)]),
             FP.el("p", { class: "principle" }, principle),
@@ -155,7 +167,7 @@
             catEl: catEl,
             col: col,
             groupId: g.id,
-            text: (d.name + " " + c.name + " " + g.name + " " + principle + " " + (data ? extraText(data) : "")).toLowerCase(),
+            text: (d.name + " " + c.name + " " + g.name + " " + principle + " " + info.extra).toLowerCase(),
             id: d.id
           });
         });
@@ -184,7 +196,14 @@
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
     renderChips();
     applyFilter();
-    if (view === "cards" && id) {
+    if (!id) return;
+    var narrow = window.matchMedia("(max-width: 768px)").matches;
+    if (view === "star" && narrow) {
+      var col = starEl.querySelector('.star-col[data-group="' + id + '"]');
+      if (col) col.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (view === "cards") {
       var target = document.getElementById("group-" + id);
       if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -287,8 +306,5 @@
   renderMap();
   renderSummary();
   applyView();
-  FP.loadAllDomains(function () {
-    renderMap();
-    applyHash();
-  });
+  applyHash();
 })();

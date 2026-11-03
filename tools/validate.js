@@ -122,6 +122,18 @@ metas.forEach((m) => {
   });
 });
 
+const manifestFile = path.join(root, "data", "manifest.js");
+if (!fs.existsSync(manifestFile)) {
+  err("manifest", "缺少 data/manifest.js，请运行 node tools/build-manifest.js");
+} else {
+  const msb = vm.createContext({ window: {} });
+  loadIntoSandbox(manifestFile, msb);
+  const manifest = (msb.window.FP && msb.window.FP.manifest) || {};
+  ids.forEach((id) => {
+    if (!manifest[id] || !isStr(manifest[id].principle, 10)) err(id, "manifest 缺少 principle");
+  });
+}
+
 /* 输出 */
 console.log(`目录：${groups.length} 大区 / ${cats} 类 / ${ids.length} 领域`);
 console.log(`数据文件：${present} / ${ids.length} 已存在，正文约 ${totalChars.toLocaleString()} 字`);

@@ -2,16 +2,18 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="第一性原理人生地图：40 个人生领域的第一性原理、拆解、案例与实操步骤。纯本地、离线可用。">
   <title>第一性原理人生地图</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <script>
-    try {
-      document.documentElement.classList.add(localStorage.getItem("fp.mapView") === "cards" ? "view-cards" : "view-star");
-    } catch (e) {
-      document.documentElement.classList.add("view-star");
-    }
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem("fp.mapView"); } catch (e) {}
+      var narrow = window.matchMedia("(max-width: 768px)").matches;
+      var view = saved === "cards" || saved === "star" ? saved : (narrow ? "cards" : "star");
+      document.documentElement.classList.add(view === "cards" ? "view-cards" : "view-star");
+    })();
   </script>
   <script src="assets/js/core.js"></script>
 </head>
@@ -32,7 +34,7 @@
     <div class="toolbar">
       <label class="search" aria-label="搜索领域">
         <span aria-hidden="true">⌕</span>
-        <input id="search" type="search" placeholder="搜索领域、原理关键词（按 / 聚焦）" autocomplete="off">
+        <input id="search" type="search" placeholder="搜索领域、原理关键词（按 / 聚焦）" autocomplete="off" enterkeyhint="search" inputmode="search">
         <button id="search-clear" class="clear hidden" type="button" aria-label="清除搜索">✕</button>
       </label>
       <nav class="group-nav" id="group-nav" aria-label="大区筛选"></nav>
@@ -56,6 +58,7 @@
   </footer>
 
   <script src="data/catalog.js"></script>
+  <script src="data/manifest.js"></script>
   <script src="assets/js/home.js"></script>
 </body>
 </html>
